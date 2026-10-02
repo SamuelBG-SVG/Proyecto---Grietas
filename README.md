@@ -97,5 +97,5 @@ Proyecto_Grietas/
 ├── data/                              <-- Carpeta contenedora de datos y fotos de prueba
 └── Models/
     └── modelo_linea_base.keras        <-- Archivo binario con los pesos del modelo
-                              ```text
+                             
 
