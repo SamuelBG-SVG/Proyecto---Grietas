@@ -22,16 +22,34 @@ El objetivo final es consolidar un prototipo *End-to-End* que apoye la estimaci�
 
 ## 📊 2. Descripción del Dataset y Análisis Exploratorio (EDA)
 
-Para la etapa de entrenamiento y validación se seleccionó una base de datos libre y ampliamente reconocida en la literatura científica:
 
-* **Nombre del Dataset:** *Concrete Crack Images for Classification* (Özgenel / METU - Middle East Technical University).
-* **Volumen Total:** 40,000 imágenes a color (RGB).
-* **Resolución Original:** $227 \times 227$ píxeles.
-* **Estructura de Clases:**
-  * `Positive` (Con Grieta): 20,000 imágenes.
-  * `Negative` (Sin Grieta): 20,000 imágenes.
-* **Balance de Datos:** Perfectamente balanceado ($50\%$ / $50\%$).
-* **Preprocesamiento:** Reescalado de imágenes a $128 \times 128$ píxeles y normalización de píxeles en el rango $[0, 1]$ para optimizar el tiempo de cómputo.
+Para garantizar la robustez, generalización y mitigación del cambio de dominio (domain shift) en la detección de patologías, el proyecto evolucionó desde un dataset base hacia un esquema de datos unificados e integrados:
+
+* Fuentes de Datos:
+  1. Concrete Crack Images for Classification (Özgenel / METU - Middle East 
+     Technical University): Base de referencia con imágenes de 227x227 píxeles.
+     
+  2. SDNET2018: Conjunto de datos complementario que aporta una gran variedad 
+     de entornos reales en muros, puentes y pavimentos con texturas e 
+     iluminaciones complejas.
+
+* Volumen Consolidado:
+  Cerca de 100,000 imágenes a color (RGB) unificadas en directorios estandarizados.
+
+* Estructura de Clases:
+  - Positive (Con Grieta / Fisura)
+  - Negative (Sin Grieta / Superficie Sana)
+
+* Preprocesamiento y Aumentación (Data Augmentation):
+  - Reescalado de muestras a dimensiones compatibles con arquitecturas 
+    profundas (128x128 o 224x224 píxeles).
+    
+  - Normalización de píxeles en el rango [0, 1].
+    
+  - Aplicación de transformaciones dinámicas (rotaciones, zoom y volteos) en el 
+    cuaderno de fusión (05_Fusion_Datasets.ipynb) y de entrenamiento avanzado 
+    (06_transfer_learning.ipynb) para enriquecer la variabilidad visual ante 
+    escenarios de campo real.
 
 ---
 
@@ -80,22 +98,29 @@ El prototipo se estructuró de manera modular de extremo a extremo (*End-to-End*
 ```text
 Proyecto_Grietas/
 │
-├── README.md                          <-- Documento principal e informe del proyecto
+├── README.md                                   <-- Documento principal e informe del proyecto
 │
 ├── 01_Exploracion/
-│   └── 01_exploracion.ipynb           <-- Carga, descompresión y análisis del dataset
+│   └── 01_exploracion.ipynb                    <-- Carga, descompresión y análisis exploratorio del dataset base (METU)
 │
 ├── 02_Modelo/
-│   └── 02_entrenamiento_baseline.ipynb <-- Entrenamiento y exportación de la CNN
+│   └── 02_entrenamiento_baseline.ipynb         <-- Entrenamiento y exportación de la CNN de línea base
 │
 ├── 03_Inclinacion/
-│   └── 03_inclinacion.ipynb           <-- Módulo OpenCV (Canny + Hough) para desaplome
+│   └── 03_inclinacion.ipynb                    <-- Módulo OpenCV (Canny + Transformada de Hough) para desaplome
 │
 ├── 04_Demo/
-│   └── 04_demo_entrega1.ipynb         <-- Pipeline completo End-to-End
+│   └── 04_demo_entrega1.ipynb                  <-- Pipeline completo End-to-End
 │
-├── data/                              <-- Carpeta contenedora de datos y fotos de prueba
+├── 05_Preprocesamiento_Augmentation/
+│   └── 05_Fusion_Datasets.ipynb                <-- Script de unificación y estructuración del dataset combinado (METU + SDNET2018)
+│
+├── 06_Transfer_Learning/
+│   └── 06_transfer_learning.ipynb              <-- Entrenamiento avanzado con MobileNetV2 y Transfer Learning
+│
+├── data/                                       <-- Directorio contenedor de clases (Positive / Negative) y datos procesados
 └── Models/
-    └── modelo_linea_base.keras        <-- Archivo binario con los pesos del modelo
+    ├── modelo_linea_base.keras                 <-- Pesos y arquitectura de la CNN inicial
+    └── mobilenetv2_grietas_v2.keras            <-- Pesos y arquitectura optimizada con Transfer Learning
                              
 
